@@ -1,0 +1,31 @@
+<html ng-app="myApp">
+<head>
+	<title>Main Blog page</title>
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="/bower_components/angular-material/angular-material.css">
+</head>
+<body>
+    <script src="/bower_components/angular/angular.js"></script> 
+    <script src="/bower_components/angular-aria/angular-aria.js"></script> 
+    <script src="/bower_components/angular-animate/angular-animate.js"></script> 
+    <script src="/bower_components/angular-material/angular-material.js"></script> 
+    <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script> 
+    <script src="/javascripts/app/main.js"></script>
+	<div layout="row" layout class="bg-dark-blue nav-dark" layout-align="space-between center">
+		<div>
+		    <md-button ui-sref="home" name="home">Home</md-button>
+		    <md-button ui-sref="about" name="about">About</md-button>
+		</div>
+		<div class="nav-buttons">
+		    <md-button class="md-raised md-warn">Log Out</md-button>
+		</div>
+	</div>
+	<hr/>
+	<!-- <md-nav-bar md-selected-nav-item="currentNavItem">
+	  <md-nav-item md-nav-sref="home" name="home">Home Page</md-nav-item>
+	  <md-nav-item md-nav-sref="about" name="about">About page</md-nav-item>
+	  <md-button class="md-raised md-warn">Log out</md-button>
+	</md-nav-bar> -->
+    <div ui-view/>
+</body>
+</html>
