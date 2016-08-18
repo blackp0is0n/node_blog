@@ -1,8 +1,12 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
 }
-
 a {
   color: #00B7FF;
+}
+
+md-toolbar {
+  background-color: white !important;
 }
