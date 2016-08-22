@@ -1,10 +1,15 @@
 var crypto = require('crypto');
-var async = require('async');
 var util = require('util');
+var async = require('async');
 var mongoose = require('../libs/mongoose'), Schema = mongoose.Schema;
 
 var schema = new Schema({
     username:{
+        type: String,
+        unique: true,
+        required: true
+    },
+    email:{
         type: String,
         unique: true,
         required: true
@@ -39,25 +44,47 @@ schema.methods.checkPassword = function(password){
     return this.encryptPassword(password) === this.hashedPassword;
 };
 
-schema.statics.authorize = function(username, password, callback){
+schema.statics.register = function(user,callback){
     var User = this;
+    User.findOne({username: user.username}, function(err, foundedUser){
+        if(err){
+            callback(err, foundedUser);
+        } else {
+            if(foundedUser){
+                callback({message: 'User exists'}, foundedUser);
+            } else {
+                var usr = new User(user);
+                usr.save(function(err){
+                    if(err){
+                        callback({message: 'Error while saving user. Please, check credentials'}, null);
+                    } else {
+                        callback(null, usr);
+                    }
+                })
+            }
+
+
+        }
+    });
+};
+
+schema.statics.authorize = function(user, callback){
+    var User = this;
+    var email = user.email;
+    var password = user.password;
     async.waterfall([
         function(callback){
-            User.findOne({username: username}, callback);
+            User.findOne({email: email}, callback);
         },
         function(user, callback){
             if(user){
                 if(user.checkPassword(password)){
                     callback(null, user);
                 } else {
-                    callback(new AuthError("Wrong password"));
+                    callback({message: 'Error! Please, check credentials ang try again'}, null);
                 }
             } else {
-                var user = new User({username: username, password: password});
-                user.save(function(err){
-                    if(err) return next(err);
-                    callback(null, user);
-                })
+                callback({message: 'Error! Please, check credentials ang try again'}, null);
             }
         }
 

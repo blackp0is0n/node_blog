@@ -4,11 +4,23 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
+var config = require('./config');
+var mongoose = require('./libs/mongoose')
+var MongoStore = require('connect-mongo')(session);
 
 var routes = require('./routes/index');
 
 var app = express();
 
+app.use(session({
+  secret: config.get('session:secret'),
+  key: config.get('session:key'),
+  cookie: config.get('session:cookie'),
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection
+  })
+}));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);

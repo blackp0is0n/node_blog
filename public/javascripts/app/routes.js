@@ -10,7 +10,12 @@ app.config(function($stateProvider, $urlRouterProvider) {
         .state('registration',{
             url: '/sign_up',
             templateUrl: '/templates/registration.html',
-            controller: 'RegistrationController'
+            controller: 'AuthController'
+        })
+        .state('sign_in', {
+            url: '/sign_in',
+            templateUrl: '/templates/login.html',
+            controller: 'AuthController'
         })
         .state('about', {
             url: '/about',

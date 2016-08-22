@@ -1,27 +1,46 @@
-<html ng-app="myApp">
+<html ng-app="myApp" ng-controller="MainController as mainCtrl">
 <head>
-	<title>Main Blog page</title>
+	<title>Blog(Logged as {{mainCtrl.currentUser.username}})</title>
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
 	<link rel="stylesheet" href="/bower_components/angular-material/angular-material.css">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
 </head>
 <body layou-fill layout='column'>
     <script src="/bower_components/angular/angular.js"></script> 
     <script src="/bower_components/angular-aria/angular-aria.js"></script> 
     <script src="/bower_components/angular-animate/angular-animate.js"></script> 
     <script src="/bower_components/angular-material/angular-material.js"></script> 
-    <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script> 
+    <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+	<script src="/bower_components/angular-password/angular-password.js"></script>
     <script src="/javascripts/app/main.js"></script>
 	<script src="/javascripts/app/controllers.js"></script>
 	<script src="/javascripts/app/routes.js"></script>
+	<script src="/javascripts/app/services.js"></script>
 	<md-toolbar layout="row" layout class="bg-dark-blue nav-dark" layout-align="space-between center">
 		<div>
-		    <md-button class="md-raised" ui-sref="home" name="home">Home</md-button>
-		    <md-button class="md-raised" ui-sref="about" name="about">About</md-button>
-			<md-button class="md-raised" ui-sref="registration" name="registration">Sign Up</md-button>
+			<md-button class="md-default" ui-sref="home">
+				Home
+			</md-button>
+
+
 		</div>
 		<div class="nav-buttons">
-		    <md-button class="md-raised md-warn">Log Out</md-button>
+			<div layout="row" ng-if="mainCtrl.currentUser">
+				<md-button>
+					<md-icon md-font-library="material-icons">account_circle</md-icon>
+					{{mainCtrl.currentUser.username}}
+				</md-button>
+				<md-button class="md-fab md-mini md-warn" aria-label="Profile">
+					<md-icon ng-click="mainCtrl.logout($event)" md-font-library="material-icons">exit_to_app</md-icon>
+				</md-button>
+			</div>
+			<div ng-if="!mainCtrl.currentUser">
+				<md-button class="md-raised" ui-sref="registration" name="registration">Sign Up</md-button>
+				<md-button class="md-raised" ui-sref="sign_in" name="sign_in">Sign In</md-button>
+				<md-button class="md-raised" ui-sref="about" name="about">About</md-button>
+			</div>
+
 		</div>
 	</md-toolbar>
 	<md-divider></md-divider>

@@ -2,20 +2,15 @@
     <md-card layout="column" flex-offset="10" flex="80" >
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h3><md-icon md-font-library="material-icons">assignment_ind</md-icon> Sign Up</h3>
+                <h3><md-icon md-font-library="material-icons">assignment_ind</md-icon> Sign In</h3>
             </div>
         </md-toolbar>
         </md-card-content>
         <div layout-margin="10">
             <md-input-container>
-                <label>Username</label>
-                <md-icon md-font-library="material-icons">account_circle</md-icon>
-                <input ng-model="user.username" required>
-            </md-input-container>
-            <md-input-container>
                 <label>Email</label>
                 <md-icon md-font-library="material-icons">mail</md-icon>
-                <input ng-model="user.email" required type="email">
+                <input ng-model="user.email" required>
             </md-input-container>
         </div>
         <md-divider></md-divider>
@@ -25,14 +20,10 @@
                 <md-icon md-font-library="material-icons">vpn_key</md-icon>
                 <input ng-model="user.password" required type="password">
             </md-input-container>
-            <md-input-container>
-                <label>Password confirmation</label>
-                <input ng-model="user.password_confirmation" required type="password">
-            </md-input-container>
         </div>
         </md-card-content>
         <md-card-actions layout="row" layout-margin="10" layout-align="center">
-            <md-button ng-click="submitForm(user)"class="md-raised">Sign up</md-button>
+            <md-button ng-click="mainCtrl.login(user)"class="md-raised">Sign In</md-button>
         </md-card-actions>
     </md-card>
 </form>
