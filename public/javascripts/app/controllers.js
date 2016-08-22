@@ -1,7 +1,7 @@
 app.controller('AuthController', function($state, $scope, $http,$mdDialog, AuthService) {
 });
 
-app.controller('MainController', function($state, $mdDialog, $scope, AuthService){
+app.controller('MainController', function($location, $state, $mdDialog, $scope, AuthService){
     var promise = AuthService.isLogged();
     var self = this;
     promise.then(function(data){
@@ -45,7 +45,7 @@ app.controller('MainController', function($state, $mdDialog, $scope, AuthService
                 .finally(function () {
                     someAlert = undefined;
                 });
-            $state.reload();
+            $state.go('home');
         }, function(error){
             var someAlert = $mdDialog.alert({
                 title: 'Error!',
@@ -59,7 +59,7 @@ app.controller('MainController', function($state, $mdDialog, $scope, AuthService
                 });
         });
     }
-    this.submitForm = function(user){
+    this.register = function(user){
         var promise = AuthService.register(user);
 
         promise.then(function(data){
@@ -74,7 +74,7 @@ app.controller('MainController', function($state, $mdDialog, $scope, AuthService
                     alert = undefined;
                 });
             self.currentUser = data;
-            $state.reload();
+            $state.go('home');
         }, function(error){
             var alert = $mdDialog.alert({
                 title: 'Attention!',
