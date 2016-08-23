@@ -4,12 +4,10 @@ var mongoose = require('../libs/mongoose'), Schema = mongoose.Schema;
 var schema = new Schema({
     title:{
         type: String,
-        unique: true,
         required: true
     },
     content:{
         type: String,
-        unique: true,
         required: true
     },
     creator: {
@@ -22,4 +20,15 @@ var schema = new Schema({
     }
 });
 
-export.Post = mongoose.model('Post', Schema);
+schema.statics.create = function(post, callback){
+    var Post = this;
+    var newPost = new Post(post);
+    newPost.save(function(err, post){
+        if(err){
+            callback({message: err.message}, null);
+        } else {
+            callback(null, post);
+        }
+    })
+};
+exports.Post = mongoose.model('Post', schema);

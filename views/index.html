@@ -6,11 +6,11 @@
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
 </head>
-<body layou-fill layout='column'>
-    <script src="/bower_components/angular/angular.js"></script> 
-    <script src="/bower_components/angular-aria/angular-aria.js"></script> 
-    <script src="/bower_components/angular-animate/angular-animate.js"></script> 
-    <script src="/bower_components/angular-material/angular-material.js"></script> 
+<body layout="column" layout-fill>
+    <script src="/bower_components/angular/angular.js"></script>
+    <script src="/bower_components/angular-aria/angular-aria.js"></script>
+    <script src="/bower_components/angular-animate/angular-animate.js"></script>
+    <script src="/bower_components/angular-material/angular-material.js"></script>
     <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
 	<script src="/bower_components/angular-password/angular-password.js"></script>
     <script src="/javascripts/app/main.js"></script>
@@ -19,11 +19,21 @@
 	<script src="/javascripts/app/services.js"></script>
 	<md-toolbar layout="row" layout class="bg-dark-blue nav-dark" layout-align="space-between center">
 		<div>
-			<md-button class="md-default" ui-sref="home">
-				Home
-			</md-button>
-
-
+			<a ui-sref="home">
+				<md-button class="md-fab md-mini" aria-label="Profile">
+					<md-icon md-font-library="material-icons">home</md-icon>
+				</md-button>
+			</a>
+			<a ui-sref="posts.all">
+				<md-button class="md-fab md-mini md-raised md-default" aria-label="Profile">
+					<md-icon md-font-library="material-icons">list</md-icon>
+				</md-button>
+			</a>
+			<a ng-if="mainCtrl.currentUser" ui-sref="posts.new">
+				<md-button class="md-fab md-mini" aria-label="Profile">
+					<md-icon md-font-library="material-icons">add</md-icon>
+				</md-button>
+			</a>
 		</div>
 		<div class="nav-buttons">
 			<div layout="row" ng-if="mainCtrl.currentUser">
@@ -44,16 +54,10 @@
 		</div>
 	</md-toolbar>
 	<md-divider></md-divider>
-	<main class='md-padding' layout="row" flex>
+	<main flex>
 		<div layout-padding flex-offset="15" flex="70">
-				<div ui-view/>
+			<div ui-view/>
 		</div>
 	</main>
-	<md-divider></md-divider>
-	<md-toolbar md-theme="default">
-		<div layout="row" layout-align="center center" flex>
-			<span>Sivakow Aleksandr, 2016 ©</span>
-		</div>
-	</md-toolbar>
 </body>
 </html>

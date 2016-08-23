@@ -1,0 +1,20 @@
+<h1> Index posts Page</h1>
+<md-button ui-sref="posts.new">Go to new post page</md-button>
+<div ng-repeat="post in posts">
+    <div layout="column">
+        <md-card>
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline">{{post.title}}</span>
+                    <span class="md-subhead">{{post.created}}</span>
+                </md-card-title-text>
+            </md-card-title>
+            <md-content>
+                {{post.content}}
+            </md-content>
+            <md-card-actions layout="row" layout-align="end center">
+                <md-button ui-sref="posts.show({id: post._id })"class="md-raised md-primary">See Full</md-button>
+            </md-card-actions>
+        </md-card>
+    </div>
+</div>

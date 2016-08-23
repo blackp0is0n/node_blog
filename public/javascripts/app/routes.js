@@ -5,7 +5,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     $stateProvider
         .state('home', {
             url: '/home',
-            templateUrl: '/templates/home.html'
+            templateUrl: '/templates/index.html'
         })
         .state('registration',{
             url: '/sign_up',
@@ -30,22 +30,27 @@ app.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: '/templates/about.html'
         })
         .state('posts', {
+            abstract: true,
             url: '/posts',
+            template: "<div ui-view></div>"
+        })
+        .state('posts.all',{
+            url: '/all',
             templateUrl: '/templates/posts/index.html',
             controller: 'PostsController'
         })
         .state('posts.show', {
-            url: '/posts/:id',
+            url: '/show/:id',
             templateUrl: '/templates/posts/show.html',
             controller: 'PostsController'
         })
         .state('posts.edit',{
-            url: '/posts/:id/edit',
+            url: '/edit/:id',
             templateUrl: '/templates/posts/edit.html',
             controller: 'PostsController'
         })
         .state('posts.new',{
-            url: '/posts/new',
+            url: '/new',
             templateUrl: '/templates/posts/new.html',
             controller: 'PostsController'
         });

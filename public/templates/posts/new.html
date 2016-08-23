@@ -1,0 +1,11 @@
+<h1>New post</h1>
+<md-divider></md-divider>
+<md-input-container class="md-block" flex-gt-sm>
+	<label>Title</label>
+	<input ng-model="post.title">
+</md-input-container>
+<md-input-container class="md-block">
+  <label>Content</label>
+  <textarea ng-model="post.content" md-maxlength="150" rows="5" md-select-on-focus></textarea>
+</md-input-container>
+<md-button ng-click="create(post)" class="md-raised">Create post</md-button>

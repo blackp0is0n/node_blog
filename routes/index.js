@@ -1,5 +1,6 @@
 var express = require('express');
 var User = require('../models/user').User;
+var Post = require('../models/post').Post;
 var router = express.Router();
 
 /* GET home page. */
@@ -57,25 +58,78 @@ router.get('/check_auth', function (req, res, next) {
     res.status(401).send({error: 'Unauthorized(no session)', user: null});
   }
 });
-
+// Get all posts
 router.get('/posts', function(req, res, next){
-
+  if(req.session.user){
+    Post.find({}, function(err, posts){
+      if(err){
+        res.status(404).send({error: {message: 'No posts'}});
+      } else {
+        res.json({posts: posts});
+      }
+    });
+  } else {
+    res.status(401).send({error: {message: 'Unauthorized'}});
+  }
 });
 
+//Create new post
 router.post('/posts', function(req, res, next){
+  var post = req.body.post;
+
+  if(req.session.user){
+
+    Post.create(post, function(error, post){
+      if(error){
+        console.log(error.message)
+        res.status(500).send({error: error})
+      } else {
+        res.json({error: null, post: post});
+      }
+    });
+  } else {
+    res.status(401).send({error:{message: 'Unauthorized'}});
+  }
 
 });
 
+//get post by id
 router.get('/posts/:id', function(req, res, next){
-
+  if(req.session.user){
+    Post.findById(req.params.id, function(err, post){
+      if(err){
+        res.status(404).send({error:{message: 'Not found'}})
+      } else {
+        res.json({post: post});
+      }
+    });
+  } else {
+    res.status(401).send({error:{message:'Unauthorized'}});
+  }
 });
 
-router.post('/posts/:id/edit', function(req, res, next){
-
+//Edit post
+router.put('/posts/:id', function(req, res, next){
+  var post_id = req.params.id;
+  var updatedPost = req.body.post;
+  Post.findByIdAndUpdate(post_id,updatedPost, function(err, post){
+    if(err){
+      res.status(500).send({error:{message: 'Updated failed'}});
+    } else {
+      res.json({message: 'Successful update', post: post});
+    }
+  });
 });
 
-router.delete('/posts/:id/delete', function(req, res, next){
-
+router.delete('/posts/:id', function(req, res, next){
+  var post_id = req.params.id;
+  Post.findByIdAndRemove(post_id, function(err){
+    if(err){
+      res.status(500);
+    } else {
+      res.json({message: 'Successful Deleted'});
+    }
+  });
 });
 
 module.exports = router;

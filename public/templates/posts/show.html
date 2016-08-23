@@ -1,0 +1,6 @@
+<h1>{{post.title}}</h1>
+<h5><small>{{post.created}}</small></h5>
+<md-divider></md-divider>
+<h4>{{post.content}}</h4>
+<md-button ng-click="remove(post)" class="md-raised md-warn">Delete Post</md-button>
+<md-button ui-sref="posts.edit({id: post._id})" class="md-raised md-primary">Edit Post</md-button>

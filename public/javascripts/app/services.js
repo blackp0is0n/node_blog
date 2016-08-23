@@ -62,3 +62,70 @@ app.factory('AuthService',function($http, $q){
     };
 
 });
+
+app.service('PostsService', function($http, $q){
+    return{
+        createPost: function(post){
+            var deferred = $q.defer();
+            $http({
+                method: "POST",
+                url:'/posts',
+                data: {post: post}
+            }).then(function successCallback(response){
+                deferred.resolve(response.data.post);
+            }, function errorCallback(response, status){
+                deferred.reject(response.data.error.message);
+            });
+            return deferred.promise;
+        },
+        getPost: function(id){
+            var deferred = $q.defer();
+            $http({
+                method: "GET",
+                url: '/posts/'+ id
+            }).then(function successCallback(response){
+                deferred.resolve(response.data.post);
+            }, function errorCallback(response, status){
+                deferred.rject(response.data.error.message);
+            });
+            return deferred.promise;
+        },
+        editPost: function(post){
+            var deferred = $q.defer();
+            $http({
+                method: "PUT",
+                url: '/posts/' + post._id,
+                data: {post: post}
+            }).then(function successCallback(response){
+                deferred.resolve({post: response.data.post, message: response.data.message});
+            }, function errorCallback(response, status){
+                deferred.reject(response.data.error.message);
+            });
+            return deferred.promise;
+        },
+        deletePost: function(post){
+            var deferred = $q.defer();
+            $http({
+                method: "DELETE",
+                url: '/posts/' + post._id
+            }).then(function successCallback(response) {
+               deferred.resolve(response.data.message);
+            }, function errorCallback(response, status){
+                deferred.reject(response.data.error.message);
+            });
+            return deferred.promise;
+        },
+        getAllPosts: function(){
+            var deferred = $q.defer();
+            $http({
+                method: "GET",
+                url: '/posts'
+            }).then(function successCallback(response){
+                deferred.resolve(response.data.posts);
+            }, function errorCallback(response, status){
+                deferred.reject(response.data.error.message);
+            });
+            return deferred.promise;
+        }
+    };
+});

@@ -6,8 +6,123 @@ app.controller('UsersController', function(AuthService, $state, $scope ){
 	console.log($scope.currentUser);
 });
 
-app.controller('PostsController', function(){
+app.controller('PostsController', function($scope,$log, $state, PostsService, $mdDialog, $stateParams){
+    $log.log($state.$current.self.name);
+    switch($state.$current.self.name){
+        case 'posts.all':
+            var promise = PostsService.getAllPosts();
+            promise.then(function(data){
+               $scope.posts = data;
+            }, function(error){
+                $scope.posts = [];
+            });
+            break;
+        case 'posts.show':
+            var promise = PostsService.getPost($stateParams.id);
+            promise.then(function(data){
+                $log.log('Success getting post');
+                $scope.post = data;
+            }, function(error){
+                $scope.post = {};
+                $log.log('Post getting failed');
+            });
+            break;
+        case 'posts.edit':
+            var promise = PostsService.getPost($stateParams.id);
+            promise.then(function(data){
+                $log.log('Success getting post');
+                $scope.post = data;
+            }, function(error){
+                $scope.post = {};
+                $log.log('Post getting failed');
+            });
+            break;
+    }
+    $scope.create = function(post){
+        var promise = PostsService.createPost(post);
+        promise.then(function(data){
+            var someAlert = $mdDialog.alert({
+                title: 'Success!',
+                textContent: 'Post successfully created! You will be redirected to posts page',
+                ok: 'OK'
+            });
+            $mdDialog
+                .show(someAlert)
+                .finally(function () {
+                    someAlert = undefined;
+                });
+            $state.go('posts.all');
 
+        }, function(error){
+            var someAlert = $mdDialog.alert({
+                title: 'Failed!',
+                textContent: error,
+                ok: 'OK'
+            });
+            $mdDialog
+                .show(someAlert)
+                .finally(function () {
+                    someAlert = undefined;
+                });
+        });
+    }
+    $scope.remove = function(post){
+        var promise = PostsService.deletePost(post);
+        promise.then(function(data){
+            var someAlert = $mdDialog.alert({
+                title: 'Success!',
+                textContent: data,
+                ok: 'OK'
+            });
+            $mdDialog
+                .show(someAlert)
+                .finally(function () {
+                    someAlert = undefined;
+                });
+            $state.go('posts.all');
+        }, function(error){
+            var someAlert = $mdDialog.alert({
+                title: 'Failed!',
+                textContent: error,
+                ok: 'OK'
+            });
+            $mdDialog
+                .show(someAlert)
+                .finally(function () {
+                    someAlert = undefined;
+                });
+        });
+
+    }
+    $scope.update = function(post){
+        var promise = PostsService.editPost(post);
+        promise.then(function successCallback(data){
+            var someAlert = $mdDialog.alert({
+                title: 'Success!',
+                textContent: 'Post updated! You will redirected to show page',
+                ok: 'OK'
+            });
+            $mdDialog
+                .show(someAlert)
+                .finally(function () {
+                    someAlert = undefined;
+                });
+            $state.go('posts.show', {id: data.post._id});
+        }, function errorCallback(error){
+            var someAlert = $mdDialog.alert({
+                title: 'Failed!',
+                textContent: error,
+                ok: 'OK'
+            });
+            $mdDialog
+                .show(someAlert)
+                .finally(function () {
+                    someAlert = undefined;
+                });
+            $state.go('posts.show', {id: data._id});
+        });
+
+    }
 });
 
 app.controller('CommentsController', function(){
