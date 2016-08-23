@@ -1,6 +1,6 @@
 <html ng-app="myApp" ng-controller="MainController as mainCtrl">
 <head>
-	<title>Blog(Logged as {{mainCtrl.currentUser.username}})</title>
+	<title>Blog</title>
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
 	<link rel="stylesheet" href="/bower_components/angular-material/angular-material.css">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -27,12 +27,12 @@
 		</div>
 		<div class="nav-buttons">
 			<div layout="row" ng-if="mainCtrl.currentUser">
-				<md-button>
+				<md-button ui-sref="edit_profile">
 					<md-icon md-font-library="material-icons">account_circle</md-icon>
 					{{mainCtrl.currentUser.username}}
 				</md-button>
-				<md-button class="md-fab md-mini md-warn" aria-label="Profile">
-					<md-icon ng-click="mainCtrl.logout($event)" md-font-library="material-icons">exit_to_app</md-icon>
+				<md-button ng-click="mainCtrl.logout($event)" class="md-fab md-mini md-warn" aria-label="Profile">
+					<md-icon md-font-library="material-icons">exit_to_app</md-icon>
 				</md-button>
 			</div>
 			<div ng-if="!mainCtrl.currentUser">

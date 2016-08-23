@@ -17,7 +17,7 @@ app.factory('AuthService',function($http, $q){
             return deferred.promise;
         },
         register: function(user){
-            var deferred = $q.deref();
+            var deferred = $q.defer();
             $http({
                 method: 'POST',
                 url: '/sign_up',

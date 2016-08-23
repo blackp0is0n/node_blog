@@ -58,4 +58,24 @@ router.get('/check_auth', function (req, res, next) {
   }
 });
 
+router.get('/posts', function(req, res, next){
+
+});
+
+router.post('/posts', function(req, res, next){
+
+});
+
+router.get('/posts/:id', function(req, res, next){
+
+});
+
+router.post('/posts/:id/edit', function(req, res, next){
+
+});
+
+router.delete('/posts/:id/delete', function(req, res, next){
+
+});
+
 module.exports = router;

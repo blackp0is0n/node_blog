@@ -1,4 +1,17 @@
-app.controller('AuthController', function($state, $scope, $http,$mdDialog, AuthService) {
+app.controller('AuthController', function($state, $scope,$mdDialog, AuthService) {
+});
+
+app.controller('UsersController', function(AuthService, $state, $scope ){
+	$scope.user = AuthService.currentUser();
+	console.log($scope.currentUser);
+});
+
+app.controller('PostsController', function(){
+
+});
+
+app.controller('CommentsController', function(){
+
 });
 
 app.controller('MainController', function($location, $state, $mdDialog, $scope, AuthService){

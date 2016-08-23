@@ -1,0 +1,40 @@
+<md-card layout="column">
+  <md-toolbar class="md-hue-2">
+    <div class="md-toolbar-tools">
+      <h2>
+        <md-icon md-font-library="material-icons">account_box</md-icon>
+        <span>Editting profile page</span>
+      </h2>
+      <span flex></span>
+    </div>
+  </md-toolbar>
+  <md-card-content>
+  <div layout-margin="10">
+          <md-input-container>
+          <label>Username</label>
+          <md-icon md-font-library="material-icons">account_circle</md-icon>
+          <input ng-model="user.username" required>
+      </md-input-container>
+  </div>
+  <md-divider></md-divider>
+  <div layout-margin="10">
+
+      <md-input-container>
+          <label>Email</label>
+          <md-icon md-font-library="material-icons">mail</md-icon>
+          <input ng-model="user.email" required type="email">
+      </md-input-container>
+  </div>
+  <md-divider></md-divider>
+  <div layout-margin="10">
+      <md-input-container>
+          <label>Password</label>
+          <md-icon md-font-library="material-icons">vpn_key</md-icon>
+          <input ng-model="user.password" required type="password">
+      </md-input-container>
+  </div>
+  </md-card-content>
+  <md-card-actions>
+    <md-button class="md-raised">Update</md-button>
+  </md-card-actions>
+</md-card>
