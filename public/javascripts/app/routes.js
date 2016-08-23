@@ -22,7 +22,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
         .state('edit_profile', {
             url: '/edit_profile',
             templateUrl: '/templates/user_edit.html',
-            controller: 'UsersController',
+            controller: 'UsersUpdateController',
             resolve: {isLogged: function(AuthService, $state){AuthService.isLogged().then(function(data){if (!data){ $state.go('home') }},function(){ $state.go('home') })}}
         })
         .state('about', {
@@ -47,12 +47,14 @@ app.config(function($stateProvider, $urlRouterProvider) {
         .state('posts.edit',{
             url: '/edit/:id',
             templateUrl: '/templates/posts/edit.html',
-            controller: 'PostsController'
+            controller: 'PostsController',
+            resolve: {isLogged: function(AuthService, $state){AuthService.isLogged().then(function(data){if (!data){ $state.go('home') }},function(){ $state.go('home') })}}
         })
         .state('posts.new',{
             url: '/new',
             templateUrl: '/templates/posts/new.html',
-            controller: 'PostsController'
+            controller: 'PostsController',
+            resolve: {isLogged: function(AuthService, $state){AuthService.isLogged().then(function(data){if (!data){ $state.go('home') }},function(){ $state.go('home') })}}
         });
 
 });

@@ -8,6 +8,21 @@ router.get('/', function(req, res, next) {
   res.render('index');
 });
 
+router.post('/update_profile', function(req, res, next){
+  var updatedUser = req.body.user;
+  if(req.session.user){
+    User.findByIdAndUpdate(req.session.user,updatedUser, function(err, user){
+      if(err){
+        res.status(500).send({message: 'Unauthorized'});
+      } else {
+        res.json({error: null, user: user});
+      }
+    });
+  } else {
+    res.status(401).send({error: {message: 'Unauthorized'}});
+  }
+});
+
 router.post('/sign_up', function(req, res, next){
   var user = req.body.user;
 
@@ -110,26 +125,35 @@ router.get('/posts/:id', function(req, res, next){
 
 //Edit post
 router.put('/posts/:id', function(req, res, next){
-  var post_id = req.params.id;
-  var updatedPost = req.body.post;
-  Post.findByIdAndUpdate(post_id,updatedPost, function(err, post){
-    if(err){
-      res.status(500).send({error:{message: 'Updated failed'}});
-    } else {
-      res.json({message: 'Successful update', post: post});
-    }
-  });
+  if(req.session.user) {
+    var post_id = req.params.id;
+    var updatedPost = req.body.post;
+    Post.findByIdAndUpdate(post_id, updatedPost, function (err, post) {
+      if (err) {
+        res.status(500).send({error: {message: 'Updated failed'}});
+      } else {
+        res.json({message: 'Successful update', post: post});
+      }
+    });
+  } else {
+    res.status(401).send({message: 'Unauthorized'})
+  }
 });
 
 router.delete('/posts/:id', function(req, res, next){
-  var post_id = req.params.id;
-  Post.findByIdAndRemove(post_id, function(err){
-    if(err){
-      res.status(500);
-    } else {
-      res.json({message: 'Successful Deleted'});
-    }
-  });
+
+  if(req.session.user){
+    var post_id = req.params.id;
+    Post.findByIdAndRemove(post_id, function(err){
+      if(err){
+        res.status(500);
+      } else {
+        res.json({message: 'Successful Deleted'});
+      }
+    });
+  } else {
+    res.status(401).send({message: 'Unauthorized'})
+  }
 });
 
 module.exports = router;

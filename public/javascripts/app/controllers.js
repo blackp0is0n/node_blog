@@ -1,9 +1,36 @@
 app.controller('AuthController', function($state, $scope,$mdDialog, AuthService) {
 });
 
-app.controller('UsersController', function(AuthService, $state, $scope ){
+app.controller('UsersUpdateController', function(AuthService, $state, $mdDialog, $scope ){
 	$scope.user = AuthService.currentUser();
-	console.log($scope.currentUser);
+    $scope.update = function(user){
+        var promise = AuthService.updateCurrentUser(user);
+        promise.then(function(data){
+            var someAlert = $mdDialog.alert({
+                title: 'Success!',
+                textContent: 'Successful profile updating',
+                ok: 'OK'
+            });
+            $mdDialog
+                .show(someAlert)
+                .finally(function () {
+                    someAlert = undefined;
+                });
+            $state.reload()
+        }, function(error){
+            var someAlert = $mdDialog.alert({
+                title: 'Error!',
+                textContent: error,
+                ok: 'OK'
+            });
+            $mdDialog
+                .show(someAlert)
+                .finally(function () {
+                    someAlert = undefined;
+                });
+        });
+
+    }
 });
 
 app.controller('PostsController', function($scope,$log, $state, PostsService, $mdDialog, $stateParams){
@@ -201,7 +228,6 @@ app.controller('MainController', function($location, $state, $mdDialog, $scope, 
                 .finally(function() {
                     alert = undefined;
                 });
-            self.currentUser = data;
             $state.go('home');
         }, function(error){
             var alert = $mdDialog.alert({

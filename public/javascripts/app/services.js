@@ -25,7 +25,7 @@ app.factory('AuthService',function($http, $q){
             }).then(function successCallback(response) {
                 deferred.resolve(response.data.user);
             }, function errorCallback(response) {
-                deferred.reject(response.error.message);
+                deferred.reject(response.message);
             });
             return deferred.promise;
         },
@@ -52,6 +52,20 @@ app.factory('AuthService',function($http, $q){
             }, function errorCallback(response, status){
                 currentUser = null;
                 deferred.reject(response.data.error);
+            });
+
+            return deferred.promise;
+        },
+        updateCurrentUser: function(user){
+            var deferred = $q.defer();
+            $http({
+                method: "POST",
+                url: '/update_profile',
+                data: {user: user}
+            }).then(function successCallback(response){
+                deferred.resolve(response.data.user);
+            }, function(response, status){
+                deferred.reject(response.error.message);
             });
 
             return deferred.promise;
