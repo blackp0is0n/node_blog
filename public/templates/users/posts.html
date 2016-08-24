@@ -1,0 +1,37 @@
+<div layout="row">
+    <div flex="40">
+        <div layout="column">
+            <md-card layout-padding>
+                <md-card-title>
+                    <md-card-title-text>
+                        <p class="md-display-3">{{user.username}}</p>
+                    </md-card-title-text>
+                </md-card-title>
+                <md-card-content>
+                    <p class="md-subhead"><md-icon md-font-library="material-icons">mail</md-icon>{{user.email}}</p>
+                    <p class="md-subhead">Registered <b>{{user.created}}</b></p>
+                </md-card-content>
+            </md-card>
+        </div>
+    </div>
+    <div flex="60">
+        <div ng-repeat="post in posts">
+            <div layout="column">
+                <md-card>
+                    <md-card-title>
+                        <md-card-title-text>
+                            <span class="md-headline">{{post.title}}</span>
+                            <span class="md-subhead">{{post.created}}</span>
+                        </md-card-title-text>
+                    </md-card-title>
+                    <md-content layout-padding>
+                        {{post.content}}
+                    </md-content>
+                    <md-card-actions layout="row" layout-align="end center">
+                        <md-button ui-sref="posts.show({id: post._id })"class="md-raised md-primary">See Full</md-button>
+                    </md-card-actions>
+                </md-card>
+            </div>
+        </div>
+    </div>
+</div>

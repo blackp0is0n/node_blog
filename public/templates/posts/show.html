@@ -19,9 +19,12 @@
         </div>
     </md-card-content>
 </md-card>
-<div ng-show="mainCtrl.currentUser._id==post.creator._id" ng-click="removeComment(postComment)">
+<div ng-show="mainCtrl.currentUser._id==post.creator._id">
     <md-button ng-click="remove(post)" class="md-raised md-warn">Delete Post</md-button>
     <md-button ui-sref="posts.edit({id: post._id})" class="md-raised md-primary">Edit Post</md-button>
+</div>
+<div ng-hide="mainCtrl.currentUser._id==post.creator._id">
+    <md-button ui-sref="user_posts({id: post.creator._id})" class="md-raised md-default">Author Posts</md-button>
 </div>
 <div>
     <md-card class="md-padding" flex>

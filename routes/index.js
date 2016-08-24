@@ -49,7 +49,6 @@ router.post('/sign_in', function(req, res, next){
       res.status(401).send({error: err, user: null})
     } else {
       req.session.user = user._id;
-
       res.json({err: err, user: user});
     }
   });
@@ -201,6 +200,23 @@ router.delete('/comments/:id', function(req, res, next){
   } else {
     res.status(401).send({error:{message:'Unauthorized'}});
   }
+});
+
+//Get User posts
+router.get('/users/:id/posts', function(req, res, next){
+  User.findById(req.params.id, function(err, user){
+    if(err){
+      res.status(500).send({error:{message: err.message}});
+    } else {
+      Post.find({creator: user}, function(err, posts){
+        if(err){
+          res.status(500).send({error: {message: err.message}})
+        } else {
+          res.json({posts: posts, user: user});
+        }
+      });
+    }
+  });
 });
 
 module.exports = router;

@@ -37,6 +37,7 @@
 		</div>
 		<div class="nav-buttons">
 			<div layout="row" ng-if="mainCtrl.currentUser">
+				<md-button ui-sref="user_posts({id: mainCtrl.currentUser._id})" class="md-raised">My Posts</md-button>
 				<md-button ui-sref="edit_profile">
 					<md-icon md-font-library="material-icons">account_circle</md-icon>
 					{{mainCtrl.currentUser.username}}

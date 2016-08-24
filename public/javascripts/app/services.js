@@ -12,7 +12,7 @@ app.factory('AuthService',function($http, $q){
                 deferred.resolve(response.data.user);
 
             }, function errorCallback(response, status){
-                deffered.reject(response.error);
+                deferred.reject(response.data.error.message);
             });
             return deferred.promise;
         },
@@ -136,6 +136,18 @@ app.service('PostsService', function($http, $q){
                 url: '/posts'
             }).then(function successCallback(response){
                 deferred.resolve(response.data.posts);
+            }, function errorCallback(response, status){
+                deferred.reject(response.data.error.message);
+            });
+            return deferred.promise;
+        },
+        getUserPosts: function(user_id){
+            var deferred = $q.defer();
+            $http({
+                method: "GET",
+                url: '/users/' + user_id + '/posts'
+            }).then(function successCallback(response){
+                deferred.resolve({posts: response.data.posts, user: response.data.user});
             }, function errorCallback(response, status){
                 deferred.reject(response.data.error.message);
             });

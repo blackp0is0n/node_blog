@@ -1,5 +1,8 @@
-<h1> Index posts Page</h1>
-<md-button class="md-raised md-primary" ui-sref="posts.new">Go to new post page</md-button>
+<h1>Blog posts</h1>
+
+<div ng-show="mainCtrl.currentUser">
+    <md-button class="md-raised md-primary" ui-sref="posts.new">New Post</md-button>
+</div>
 <div ng-repeat="post in posts">
     <div layout="column">
         <md-card>

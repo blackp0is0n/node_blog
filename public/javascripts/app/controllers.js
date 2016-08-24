@@ -1,6 +1,32 @@
 app.controller('AuthController', function($state, $scope,$mdDialog, AuthService) {
 });
 
+app.controller('UsersController', function($scope, $stateParams, AuthService, PostsService){
+    var user_id = $stateParams.id;
+    var promise = PostsService.getUserPosts(user_id);
+    promise.then(function successCallback(data){
+        $scope.posts = data.posts;
+        data.posts.forEach(function(post){
+            var dateObject = new Date(Date.parse(post.created));
+            post.created = dateObject.toDateString();
+        });
+        var dateObject = new Date(Date.parse(data.user.created));
+        data.user.created = dateObject.toDateString();
+        $scope.user = data.user;
+    }, function errorCallback(error){
+        var someAlert = $mdDialog.alert({
+            title: 'Error!',
+            textContent: error,
+            ok: 'OK'
+        });
+        $mdDialog
+            .show(someAlert)
+            .finally(function () {
+                someAlert = undefined;
+            });
+    });
+});
+
 app.controller('UsersUpdateController', function(AuthService, $state, $mdDialog, $scope ){
 	$scope.user = AuthService.currentUser();
     $scope.update = function(user){

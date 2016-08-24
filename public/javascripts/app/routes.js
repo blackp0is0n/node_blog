@@ -50,6 +50,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
             controller: 'PostsController',
             resolve: {isLogged: function(AuthService, $state){AuthService.isLogged().then(function(data){if (!data){ $state.go('home') }},function(){ $state.go('home') })}}
         })
+        .state('user_posts',{
+            url: '/:id/posts',
+            templateUrl: '/templates/users/posts.html',
+            controller: 'UsersController'
+        })
         .state('posts.new',{
             url: '/new',
             templateUrl: '/templates/posts/new.html',
