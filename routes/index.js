@@ -1,6 +1,7 @@
 var express = require('express');
 var User = require('../models/user').User;
 var Post = require('../models/post').Post;
+var Comment = require('../models/comment').Comment;
 var router = express.Router();
 
 /* GET home page. */
@@ -75,25 +76,20 @@ router.get('/check_auth', function (req, res, next) {
 });
 // Get all posts
 router.get('/posts', function(req, res, next){
-  if(req.session.user){
-    Post.find({}, function(err, posts){
-      if(err){
-        res.status(404).send({error: {message: 'No posts'}});
-      } else {
-        res.json({posts: posts});
-      }
-    });
-  } else {
-    res.status(401).send({error: {message: 'Unauthorized'}});
-  }
+  Post.find({}, function(err, posts){
+    if(err){
+      res.status(404).send({error: {message: 'No posts'}});
+    } else {
+      res.json({posts: posts});
+    }
+  });
 });
 
 //Create new post
 router.post('/posts', function(req, res, next){
   var post = req.body.post;
-
+  post.creator = req.user;
   if(req.session.user){
-
     Post.create(post, function(error, post){
       if(error){
         console.log(error.message)
@@ -110,17 +106,52 @@ router.post('/posts', function(req, res, next){
 
 //get post by id
 router.get('/posts/:id', function(req, res, next){
-  if(req.session.user){
-    Post.findById(req.params.id, function(err, post){
+    Post.findById(req.params.id).populate('creator').exec(function(err, post){
       if(err){
         res.status(404).send({error:{message: 'Not found'}})
       } else {
         res.json({post: post});
       }
     });
+});
+
+router.post('/posts/:id/new_comment', function(req, res, next){
+  if(req.session.user){
+    Post.findById(req.params.id, function(err, post){
+      if(err){
+        res.status(500).send({error:{message: 'Comment cannot be created'}});
+      } else {
+        var comment = req.body.comment;
+        var user = req.user;
+        Comment.create(comment, user, post, function(err, comment){
+          if(err){
+            console.log(err.message);
+            res.status(503).send({error:{message:'Comment cannot be created'}});
+          } else {
+            res.json({post: post, comment:comment});
+          }
+        });
+      }
+    });
   } else {
-    res.status(401).send({error:{message:'Unauthorized'}});
+    res.status(401).send({error: {message: 'Unauthorized'}});
   }
+});
+
+router.get('/posts/:id/comments', function(req, res, next){
+  Post.findById(req.params.id, function(err, post){
+    if(err){
+      res.status(500).send({error:{message: 'Cannot load comments'}});
+    } else {
+      Comment.find({post: post}).populate('creator').populate('post').exec(function(err, comments){
+        if(err){
+          res.status(500).send({error:{message: 'Cannot load comments'}});
+        } else {
+          res.json({comments: comments});
+        }
+      });
+    }
+  });
 });
 
 //Edit post
@@ -140,8 +171,9 @@ router.put('/posts/:id', function(req, res, next){
   }
 });
 
-router.delete('/posts/:id', function(req, res, next){
 
+//Delete post
+router.delete('/posts/:id', function(req, res, next){
   if(req.session.user){
     var post_id = req.params.id;
     Post.findByIdAndRemove(post_id, function(err){
@@ -153,6 +185,21 @@ router.delete('/posts/:id', function(req, res, next){
     });
   } else {
     res.status(401).send({message: 'Unauthorized'})
+  }
+});
+
+//Remove comment
+router.delete('/comments/:id', function(req, res, next){
+  if(req.session.user){
+    Comment.findByIdAndRemove(req.params.id, function(err){
+      if(err){
+        res.status(500).send({error:{message:'Error while removing comment'}});
+      } else {
+        res.json({message: 'Successful removed'});
+      }
+    });
+  } else {
+    res.status(401).send({error:{message:'Unauthorized'}});
   }
 });
 

@@ -34,11 +34,15 @@ app.controller('UsersUpdateController', function(AuthService, $state, $mdDialog,
 });
 
 app.controller('PostsController', function($scope,$log, $state, PostsService, $mdDialog, $stateParams){
-    $log.log($state.$current.self.name);
+    $scope.comments = [];
     switch($state.$current.self.name){
         case 'posts.all':
             var promise = PostsService.getAllPosts();
             promise.then(function(data){
+                data.forEach(function(post){
+                    var dateObject = new Date(Date.parse(post.created));
+                    post.created = dateObject.toDateString();
+                });
                $scope.posts = data;
             }, function(error){
                 $scope.posts = [];
@@ -48,10 +52,23 @@ app.controller('PostsController', function($scope,$log, $state, PostsService, $m
             var promise = PostsService.getPost($stateParams.id);
             promise.then(function(data){
                 $log.log('Success getting post');
+                var dateObject = new Date(Date.parse(data.created));
+                data.created = dateObject.toDateString();
                 $scope.post = data;
             }, function(error){
                 $scope.post = {};
                 $log.log('Post getting failed');
+            });
+            var promise = PostsService.getPostComments($stateParams.id);
+            promise.then(function(data){
+                data.forEach(function(comment){
+                    var dateObject = new Date(Date.parse(comment.created));
+                    comment.created = dateObject.toDateString();
+                });
+                $scope.comments = data;
+                console.log(data);
+            }, function(error){
+                $scope.comments = [];
             });
             break;
         case 'posts.edit':
@@ -79,7 +96,7 @@ app.controller('PostsController', function($scope,$log, $state, PostsService, $m
                     someAlert = undefined;
                 });
             $state.go('posts.all');
-
+            $log.log(data);
         }, function(error){
             var someAlert = $mdDialog.alert({
                 title: 'Failed!',
@@ -149,6 +166,49 @@ app.controller('PostsController', function($scope,$log, $state, PostsService, $m
             $state.go('posts.show', {id: data._id});
         });
 
+    }
+
+    $scope.addComment = function(comment){
+        var promise = PostsService.addComment($stateParams.id, comment);
+        promise.then(function successCallback(data){
+            var dateObject = new Date(Date.parse(data.created));
+            data.created = dateObject.toDateString();
+            $scope.comments.push(data);
+            console.log($scope);
+        }, function errorCallback(error){
+            var alert = $mdDialog.alert({
+                title: 'Attention!',
+                textContent: error,
+                ok: 'OK'
+            });
+            $mdDialog
+                .show( alert )
+                .finally(function() {
+                    alert = undefined;
+                });
+        });
+    }
+
+    $scope.removeComment = function(comment){
+        var promise = PostsService.removeComment(comment);
+        promise.then(function successCallback(response){
+            var removingElement = $scope.comments.indexOf(comment);
+            if(removingElement != -1) {
+                $scope.comments.splice(removingElement, 1);
+            }
+            $log.log($scope.comments);
+        }, function errorCallback(error){
+            var alert = $mdDialog.alert({
+                title: 'Attention!',
+                textContent: error,
+                ok: 'OK'
+            });
+            $mdDialog
+                .show( alert )
+                .finally(function() {
+                    alert = undefined;
+                });
+        });
     }
 });
 

@@ -1,6 +1,57 @@
-<h1>{{post.title}}</h1>
-<h5><small>{{post.created}}</small></h5>
-<md-divider></md-divider>
-<h4>{{post.content}}</h4>
-<md-button ng-click="remove(post)" class="md-raised md-warn">Delete Post</md-button>
-<md-button ui-sref="posts.edit({id: post._id})" class="md-raised md-primary">Edit Post</md-button>
+<md-card layout="column">
+    <md-toolbar class="md-padding">
+        <div layout="column" layout-align="center center">
+            <h1>{{post.title}}</h1>
+        </div>
+        <section layout="row" layout-sm="column" layout-align="end center" layout-wrap>
+            <div layout="row" layout-align="start center" flex>
+                <small>{{post.created}}</small>
+                <span flex></span>
+            </div>
+            <p>by <b>{{post.creator.username}}</b></p>
+        </section>
+    </md-toolbar>
+    <md-card-content>
+        <div layout-margin="10">
+            <p class="md-subhead" style="text-align: justify">&emsp;
+                {{post.content}}
+            </p>
+        </div>
+    </md-card-content>
+</md-card>
+<div ng-if="mainCtrl.currentUser">
+    <md-button ng-click="remove(post)" class="md-raised md-warn">Delete Post</md-button>
+    <md-button ui-sref="posts.edit({id: post._id})" class="md-raised md-primary">Edit Post</md-button>
+</div>
+<div>
+    <md-card class="md-padding" flex>
+        <md-card-title>
+            <md-card-title-text>
+                <span class="md-headline">Comments ({{comments.length}})</span>
+            </md-card-title-text>
+        </md-card-title>
+        <md-divider></md-divider>
+        <md-card-content>
+            <div ng-if="mainCtrl.currentUser">
+                <md-input-container class="md-block">
+                    <label>Comment...</label>
+                    <textarea ng-model="comment.body" md-maxlength="150" rows="3" md-select-on-focus></textarea>
+                </md-input-container>
+                <md-button ng-click="addComment(comment); comment = {}" class="md-raised md-primary">Send</md-button>
+            </div>
+            <md-list flex>
+                <div ng-repeat="postComment in comments">
+                    <md-list-item class="md-3-line">
+                        <md-icon class="md-avatar" md-font-library="material-icons" size="64">account_box</md-icon>
+                        <div class="md-list-item-text" layout="column">
+                            <h3>{{postComment.creator.username}}</h3>
+                            <h4>{{postComment.body}}</h4>
+                            <input type="hidden" value="{{postComment._id}}"/>
+                            <p>{{postComment.created}}</p>
+                        </div>
+                        <md-button ng-show="mainCtrl.currentUser._id==postComment.creator._id" ng-click="removeComment(postComment)" class="md-raised md-default">Delete</md-button>
+                    </md-list-item>
+                </div>
+        </md-card-content>
+    </md-card>
+</div>

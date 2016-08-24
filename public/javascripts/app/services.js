@@ -140,6 +140,43 @@ app.service('PostsService', function($http, $q){
                 deferred.reject(response.data.error.message);
             });
             return deferred.promise;
+        },
+        addComment: function(post_id, comment){
+            var deferred = $q.defer();
+            $http({
+                method: 'POST',
+                url: '/posts/'+ post_id + '/new_comment',
+                data: {comment: comment}
+            }).then(function successCallback(response){
+                deferred.resolve(response.data.comment);
+            }, function errorCallback(response, status){
+                deferred.reject(response.message);
+            });
+            return deferred.promise;
+        },
+        getPostComments: function(post_id){
+            var deferred = $q.defer();
+            $http({
+                method: "GET",
+                url: '/posts/' + post_id + '/comments'
+            }).then(function successCallback(response){
+                deferred.resolve(response.data.comments);
+            }, function errorCallback(response, status){
+                deferred.reject(response.data.error.message);
+            });
+            return deferred.promise;
+        },
+        removeComment: function(comment){
+            var deferred = $q.defer();
+            $http({
+                method: "DELETE",
+                url: '/comments/' + comment._id
+            }).then(function successCallback(response){
+                deferred.resolve(response.data.message);
+            }, function errorCallback(response, status){
+                deferred.reject(response.error.message);
+            });
+            return deferred.promise;
         }
     };
 });
