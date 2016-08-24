@@ -19,7 +19,7 @@
         </div>
     </md-card-content>
 </md-card>
-<div ng-if="mainCtrl.currentUser">
+<div ng-show="mainCtrl.currentUser._id==post.creator._id" ng-click="removeComment(postComment)">
     <md-button ng-click="remove(post)" class="md-raised md-warn">Delete Post</md-button>
     <md-button ui-sref="posts.edit({id: post._id})" class="md-raised md-primary">Edit Post</md-button>
 </div>
