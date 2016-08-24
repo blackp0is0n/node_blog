@@ -60,6 +60,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: '/templates/posts/new.html',
             controller: 'PostsController',
             resolve: {isLogged: function(AuthService, $state){AuthService.isLogged().then(function(data){if (!data){ $state.go('home') }},function(){ $state.go('home') })}}
+        })
+        .state('search',{
+            url: '/search',
+            templateUrl: '/templates/posts/search_results.html',
+            controller: 'SearchController'
         });
 
 });

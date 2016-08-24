@@ -70,6 +70,7 @@ app.controller('PostsController', function($scope,$log, $state, PostsService, $m
                     post.created = dateObject.toDateString();
                 });
                $scope.posts = data;
+               $log.log(data)
             }, function(error){
                 $scope.posts = [];
             });
@@ -236,6 +237,11 @@ app.controller('PostsController', function($scope,$log, $state, PostsService, $m
                 });
         });
     }
+});
+
+
+app.controller('SearchController', function($state){
+
 });
 
 app.controller('CommentsController', function(){

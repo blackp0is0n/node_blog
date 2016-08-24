@@ -75,7 +75,7 @@ router.get('/check_auth', function (req, res, next) {
 });
 // Get all posts
 router.get('/posts', function(req, res, next){
-  Post.find({}, function(err, posts){
+  Post.find({}).populate('creator').exec(function(err, posts){
     if(err){
       res.status(404).send({error: {message: 'No posts'}});
     } else {

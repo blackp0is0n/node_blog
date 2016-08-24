@@ -15,8 +15,11 @@
             <md-content layout-padding>
                 {{post.content}}
             </md-content>
-            <md-card-actions layout="row" layout-align="end center">
-                <md-button ui-sref="posts.show({id: post._id })"class="md-raised md-primary">See Full</md-button>
+            <md-card-actions layout="row" layout-align="end center" layout-wrap>
+                    <div layout="row" layout-align="start center" flex>
+                        <p>by <b>{{post.creator.username}}</b></p>
+                    </div>
+                <md-button ui-sref="posts.show({id: post._id })"class="md-raised md-primary">See Full </md-button>
             </md-card-actions>
         </md-card>
     </div>
