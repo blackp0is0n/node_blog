@@ -192,3 +192,22 @@ app.service('PostsService', function($http, $q){
         }
     };
 });
+
+app.service('SearchService', function ($http, $q) {
+    return {
+        findByTitle: function(title){
+            var deferred = $q.defer();
+            $http({
+                method: 'POST',
+                url: '/search',
+                data: {query: title}
+            }).then(function successCallback(response){
+                console.log(response)
+                deferred.resolve(response.data.posts);
+            }, function(response, status){
+                deferred.reject(response.data.error.message);
+            });
+            return deferred.promise;
+        }
+    }
+})

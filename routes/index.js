@@ -2,6 +2,7 @@ var express = require('express');
 var User = require('../models/user').User;
 var Post = require('../models/post').Post;
 var Comment = require('../models/comment').Comment;
+var Vote = require('../models/vote').Vote;
 var router = express.Router();
 
 /* GET home page. */
@@ -217,6 +218,59 @@ router.get('/users/:id/posts', function(req, res, next){
       });
     }
   });
+});
+
+router.post('/search', function(req, res, next){
+  var q = req.body.query;
+  if(q){
+    Post.find({title: RegExp(q, "i")}).populate('creator').exec(function(err, posts){
+      if(err){
+        res.status(500).send({error:{message: err.message}});
+      } else {
+        res.json({posts: posts});
+      }
+    });
+  } else {
+    res.json({posts:[]});
+  }
+});
+//Get post votes
+router.get('/posts/:id/votes', function(req, res, next){
+  Post.findById(req.params.id, function (err, post) {
+    if(err){
+      res.status(500).send({error: err});
+    } else {
+      Vote.postVotes(post, function(err, votes){
+        if(err){
+          res.status(500).send({error: err});
+        } else {
+          res.json({votes: votes});
+        }
+      });
+    }
+
+  });
+});
+
+router.post('/post/:id/vote', function(req, res, next){
+  var vote = req.body.vote;
+  if(req.session.user){
+    Post.findById(req.params.id, function (err, post) {
+      if(err){
+        res.status(500).send({error:err});
+      } else {
+        Vote.votePost(post, vote, req.user, function(err, vote){
+          if(err){
+            res.status(500).send({error: err});
+          } else {
+            res.json({vote: vote});
+          }
+        })
+      }
+    });
+  } else {
+    res.status(401).send({error:{message: 'Unauthorized users cannot vote'}});
+  }
 });
 
 module.exports = router;

@@ -240,8 +240,25 @@ app.controller('PostsController', function($scope,$log, $state, PostsService, $m
 });
 
 
-app.controller('SearchController', function($state){
-
+app.controller('SearchController', function($state, $scope, SearchService){
+    $scope.search = function(query){
+        var promise = SearchService.findByTitle(query);
+        promise.then(function successCallback(data){
+            $scope.posts = data;
+            console.log(data);
+        }, function errorCallback(error){
+            var alert = $mdDialog.alert({
+                title: 'Attention!',
+                textContent: error,
+                ok: 'OK'
+            });
+            $mdDialog
+                .show( alert )
+                .finally(function() {
+                    alert = undefined;
+                });
+        });
+    }
 });
 
 app.controller('CommentsController', function(){
