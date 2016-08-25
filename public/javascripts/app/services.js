@@ -195,12 +195,12 @@ app.service('PostsService', function($http, $q){
 
 app.service('SearchService', function ($http, $q) {
     return {
-        findByTitle: function(title){
+        findByTitle: function(title, criteria){
             var deferred = $q.defer();
             $http({
                 method: 'POST',
                 url: '/search',
-                data: {query: title}
+                data: {query: title, criteria: criteria}
             }).then(function successCallback(response){
                 console.log(response)
                 deferred.resolve(response.data.posts);

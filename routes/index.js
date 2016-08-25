@@ -221,15 +221,38 @@ router.get('/users/:id/posts', function(req, res, next){
 });
 
 router.post('/search', function(req, res, next){
+  var criteria = req.body.criteria;
   var q = req.body.query;
   if(q){
-    Post.find({title: RegExp(q, "i")}).populate('creator').exec(function(err, posts){
-      if(err){
-        res.status(500).send({error:{message: err.message}});
-      } else {
-        res.json({posts: posts});
-      }
-    });
+    var opts = {};
+    opts[criteria] = RegExp(q, "i");
+    if(criteria=='username'){
+      User.findOne(opts, function(err, user){
+        if(err){
+          res.status(500).send({error:{message: 'Error while finding user'}});
+        } else {
+          if(user){
+            Post.find({creator: user}).populate('creator').exec(function(err, posts){
+              if(err){
+                res.status(500).send({error:{message: 'Error while finding posts'}});
+              } else {
+                res.json({posts: posts});
+              }
+            });
+          } else {
+            res.status(404).send({error:{message:'User not found'}});
+          }
+        }
+      });
+    } else {
+      Post.find(opts).populate('creator').exec(function(err, posts){
+        if(err){
+          res.status(500).send({error:{message: err.message}});
+        } else {
+          res.json({posts: posts});
+        }
+      });
+    }
   } else {
     res.json({posts:[]});
   }

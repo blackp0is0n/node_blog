@@ -1,6 +1,48 @@
-<h1>Search results page</h1>
-<input ng-model="query">
-<md-button ng-click="search(query)">Find</md-button>
-<div ng-repeat="post in posts">
-    <h2>{{post.title}}</h2>
+<div layout="row">
+    <div flex="80">
+        <div layout="column">
+            <md-card layout-padding>
+                <md-card-content>
+                    <md-input-container class="md-block">
+                        <input ng-model="query" placeholder="Search text">
+
+                    </md-input-container>
+                </md-card-content>
+            </md-card>
+            <div layout-padding ng-if="posts.length>0"><small>Founded <b>{{posts.length}}</b> posts</small></div>
+            <div layout-padding ng-if="posts.length==0"><small>Posts not found</small></div>
+            <div ng-repeat="post in posts">
+                <div layout="column">
+                    <md-card>
+                        <md-card-title>
+                            <md-card-title-text>
+                                <span class="md-headline">{{post.title}}</span>
+                                <span class="md-subhead">{{post.created}}</span>
+                            </md-card-title-text>
+                        </md-card-title>
+                        <md-content layout-padding>
+                            {{post.content}}
+                        </md-content>
+                        <md-card-actions layout="row" layout-align="end center" layout-wrap>
+                            <div layout="row" layout-align="start center" flex>
+                                <p>by <b>{{post.creator.username}}</b></p>
+                            </div>
+                            <md-button ui-sref="posts.show({id: post._id })"class="md-raised md-primary">See Full </md-button>
+                        </md-card-actions>
+                    </md-card>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div flex="20">
+        <md-card layout-padding>
+            <md-card-content>
+                <md-button class="md-raised md-primary" ng-click="search(query, criteria)">Find</md-button>
+                <md-radio-group ng-model="criteria">
+                    <md-radio-button value="title" >By Title</md-radio-button>
+                    <md-radio-button value="username"> By Author </md-radio-button>
+                </md-radio-group>
+            </md-card-content>
+        </md-card>
+    </div>
 </div>

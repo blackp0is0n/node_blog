@@ -241,11 +241,12 @@ app.controller('PostsController', function($scope,$log, $state, PostsService, $m
 
 
 app.controller('SearchController', function($state, $scope, SearchService){
-    $scope.search = function(query){
-        var promise = SearchService.findByTitle(query);
+    $scope.criteria = 'title';
+    $scope.posts = [];
+    $scope.search = function(query, criteria){
+        var promise = SearchService.findByTitle(query, criteria);
         promise.then(function successCallback(data){
             $scope.posts = data;
-            console.log(data);
         }, function errorCallback(error){
             var alert = $mdDialog.alert({
                 title: 'Attention!',
