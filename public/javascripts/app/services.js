@@ -223,4 +223,6 @@ app.service('SearchService', function ($http, $q) {
             return deferred.promise;
         }
     }
-})
+});
+
+app.factory('Socket', function(){});

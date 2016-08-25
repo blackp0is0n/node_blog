@@ -98,6 +98,15 @@ app.controller('PostsController', function($scope,$log, $state, PostsService, $m
                     $scope.postRating = votesSum / data.votes.length;
                 }
                 $scope.post = data.post;
+
+                var socket = io();
+                socket.on('connect', function() {
+                    socket.emit('room', $scope.post._id);
+                });
+                socket.on('comments_count', function(data) {
+                    $scope.commentsCount = data;
+                });
+
             }, function(error){
                 $scope.post = {};
             });
@@ -107,6 +116,7 @@ app.controller('PostsController', function($scope,$log, $state, PostsService, $m
                     var dateObject = new Date(Date.parse(comment.created));
                     comment.created = dateObject.toDateString();
                 });
+                $scope.commentsCount = data.length;
                 $scope.comments = data;
             }, function(error){
                 $scope.comments = [];
@@ -122,6 +132,29 @@ app.controller('PostsController', function($scope,$log, $state, PostsService, $m
             });
             break;
     }
+    $scope.loadComments = function(){
+        var promise = PostsService.getPostComments($stateParams.id);
+        promise.then(function successCallback(data){
+            data.forEach(function(comment){
+                var dateObject = new Date(Date.parse(comment.created));
+                comment.created = dateObject.toDateString();
+            });
+            $scope.commentsCount = data.length;
+            $scope.comments = data;
+        }, function errorCallback(error){
+            var someAlert = $mdDialog.alert({
+                title: 'Failed!',
+                textContent: error,
+                ok: 'OK'
+            });
+            $mdDialog
+                .show(someAlert)
+                .finally(function () {
+                    someAlert = undefined;
+                });
+        });
+    };
+
     $scope.create = function(post){
         var promise = PostsService.createPost(post);
         promise.then(function(data){

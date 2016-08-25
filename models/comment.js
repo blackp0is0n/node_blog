@@ -26,7 +26,6 @@ schema.statics.create = function(comment, user, post, callback){
         post: post,
         creator: user
     });
-    console.log(newComment);
     newComment.save(function(err, comment){
         if(err){
             callback({message: err.message}, null);

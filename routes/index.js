@@ -137,9 +137,12 @@ router.post('/posts/:id/new_comment', function(req, res, next){
         var user = req.user;
         Comment.create(comment, user, post, function(err, comment){
           if(err){
-            console.log(err.message);
             res.status(503).send({error:{message:'Comment cannot be created'}});
           } else {
+            Comment.count({post: post}).populate('post').exec(function(err, count) {
+              var io = req.app.get('socketio');
+              io.sockets.in(''+req.params.id).emit('comments_count', count);
+            });
             res.json({post: post, comment:comment});
           }
         });
