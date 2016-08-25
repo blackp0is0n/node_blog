@@ -42,7 +42,7 @@ schema.statics.votePost = function(post, vote, voter , callback){
 
 schema.statics.postVotes = function(post, callback){
     var Vote = this;
-    Vote.find({post: post}).populate('post').exec(function(err, votes){
+    Vote.find({post: post}).populate('post').populate('voter').exec(function(err, votes){
        if(err){
            callback(err, null);
        } else {

@@ -19,13 +19,33 @@
         </div>
     </md-card-content>
 </md-card>
-<div ng-show="mainCtrl.currentUser._id==post.creator._id">
-    <md-button ng-click="remove(post)" class="md-raised md-warn">Delete Post</md-button>
-    <md-button ui-sref="posts.edit({id: post._id})" class="md-raised md-primary">Edit Post</md-button>
-</div>
-<div ng-hide="mainCtrl.currentUser._id==post.creator._id">
-    <md-button ui-sref="user_posts({id: post.creator._id})" class="md-raised md-default">Author Posts</md-button>
-</div>
+
+
+<section layout="row" layout-sm="column" layout-align="end center" layout-wrap>
+    <div layout="row" layout-align="start center" flex>
+        <div ng-show="mainCtrl.currentUser._id==post.creator._id">
+            <md-button ng-click="remove(post)" class="md-raised md-warn">Delete Post</md-button>
+            <md-button ui-sref="posts.edit({id: post._id})" class="md-raised md-primary">Edit Post</md-button>
+        </div>
+        <div ng-hide="mainCtrl.currentUser._id==post.creator._id">
+
+            <section layout="row" layout-sm="column" layout-align="end center" layout-wrap>
+                <div layout="row" layout-align="start center" flex>
+                    <md-button ui-sref="user_posts({id: post.creator._id})" class="md-raised md-default">Author Posts</md-button>
+                </div>
+                <div ng-hide="showRating || !mainCtrl.currentUser">
+                    <input type="number" ng-model="rating"><md-button ng-click="ratePost(post, rating)">Rate</md-button>
+                </div>
+                <div layout-padding ng-show="showRating">
+                    <small>Your rating <b>{{rating}}</b></small><br/>
+                </div>
+            </section>
+        </div>
+    </div>
+    <small layout-padding>All users rating:<b>{{postRating}}/5</b></small>
+</section>
+
+
 <div>
     <md-card class="md-padding" flex>
         <md-card-title>

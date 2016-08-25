@@ -110,7 +110,19 @@ router.get('/posts/:id', function(req, res, next){
       if(err){
         res.status(404).send({error:{message: 'Not found'}})
       } else {
-        res.json({post: post});
+        Vote.findOne({voter: req.user, post: post}).populate('creator').populate('post').exec(function(err, vote){
+          if(err){
+            res.status(500).send({error:{message: 'Error finding vote'}});
+          } else {
+            Vote.postVotes(post, function(err, votes){
+              if(err){
+                res.json({post: post, votes: null});
+              } else {
+                res.json({post: post, votes: votes});
+              }
+            });
+          }
+        });
       }
     });
 });
@@ -275,7 +287,7 @@ router.get('/posts/:id/votes', function(req, res, next){
   });
 });
 
-router.post('/post/:id/vote', function(req, res, next){
+router.post('/posts/:id/vote', function(req, res, next){
   var vote = req.body.vote;
   if(req.session.user){
     Post.findById(req.params.id, function (err, post) {
@@ -286,7 +298,7 @@ router.post('/post/:id/vote', function(req, res, next){
           if(err){
             res.status(500).send({error: err});
           } else {
-            res.json({vote: vote});
+            res.json({vote: vote.vote});
           }
         })
       }

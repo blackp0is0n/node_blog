@@ -59,8 +59,10 @@ app.controller('UsersUpdateController', function(AuthService, $state, $mdDialog,
     }
 });
 
-app.controller('PostsController', function($scope,$log, $state, PostsService, $mdDialog, $stateParams){
+app.controller('PostsController', function($scope,$log, $state, PostsService, $mdDialog, $stateParams, AuthService){
+    $scope.showRating = false;
     $scope.comments = [];
+    $scope.postRating = 0;
     switch($state.$current.self.name){
         case 'posts.all':
             var promise = PostsService.getAllPosts();
@@ -78,13 +80,26 @@ app.controller('PostsController', function($scope,$log, $state, PostsService, $m
         case 'posts.show':
             var promise = PostsService.getPost($stateParams.id);
             promise.then(function(data){
-                $log.log('Success getting post');
-                var dateObject = new Date(Date.parse(data.created));
-                data.created = dateObject.toDateString();
-                $scope.post = data;
+                var dateObject = new Date(Date.parse(data.post.created));
+                data.post.created = dateObject.toDateString();
+                var currentUser = AuthService.currentUser();
+                var votesSum = 0;
+                data.votes.forEach(function(vote){
+                    votesSum += vote.vote;
+                    if(currentUser){
+                        if(vote.voter._id == currentUser._id){
+                            $scope.showRating = true;
+                            $scope.rating = vote.vote;
+                        }
+                    }
+
+                });
+                if(votesSum > 0){
+                    $scope.postRating = votesSum / data.votes.length;
+                }
+                $scope.post = data.post;
             }, function(error){
                 $scope.post = {};
-                $log.log('Post getting failed');
             });
             var promise = PostsService.getPostComments($stateParams.id);
             promise.then(function(data){
@@ -93,7 +108,6 @@ app.controller('PostsController', function($scope,$log, $state, PostsService, $m
                     comment.created = dateObject.toDateString();
                 });
                 $scope.comments = data;
-                console.log(data);
             }, function(error){
                 $scope.comments = [];
             });
@@ -101,8 +115,7 @@ app.controller('PostsController', function($scope,$log, $state, PostsService, $m
         case 'posts.edit':
             var promise = PostsService.getPost($stateParams.id);
             promise.then(function(data){
-                $log.log('Success getting post');
-                $scope.post = data;
+                $scope.post = data.post;
             }, function(error){
                 $scope.post = {};
                 $log.log('Post getting failed');
@@ -225,6 +238,38 @@ app.controller('PostsController', function($scope,$log, $state, PostsService, $m
             }
             $log.log($scope.comments);
         }, function errorCallback(error){
+            var alert = $mdDialog.alert({
+                title: 'Attention!',
+                textContent: error,
+                ok: 'OK'
+            });
+            $mdDialog
+                .show( alert )
+                .finally(function() {
+                    alert = undefined;
+                });
+        });
+    }
+
+    $scope.ratePost = function(post, rating){
+        if(rating < 1 || rating >5){
+            var alert = $mdDialog.alert({
+                title: 'Attention!',
+                textContent: 'Rating must be in range 1..5',
+                ok: 'OK'
+            });
+            $mdDialog
+                .show( alert )
+                .finally(function() {
+                    alert = undefined;
+                });
+            return;
+        }
+        var promise = PostsService.votePost(post._id, rating);
+        promise.then(function successCallback(data){
+            $scope.rating = data;
+            $scope.showRating = true;
+        }, function errorCalback(error){
             var alert = $mdDialog.alert({
                 title: 'Attention!',
                 textContent: error,

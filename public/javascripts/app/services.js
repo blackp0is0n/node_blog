@@ -98,7 +98,7 @@ app.service('PostsService', function($http, $q){
                 method: "GET",
                 url: '/posts/'+ id
             }).then(function successCallback(response){
-                deferred.resolve(response.data.post);
+                deferred.resolve(response.data);
             }, function errorCallback(response, status){
                 deferred.rject(response.data.error.message);
             });
@@ -148,6 +148,19 @@ app.service('PostsService', function($http, $q){
                 url: '/users/' + user_id + '/posts'
             }).then(function successCallback(response){
                 deferred.resolve({posts: response.data.posts, user: response.data.user});
+            }, function errorCallback(response, status){
+                deferred.reject(response.data.error.message);
+            });
+            return deferred.promise;
+        },
+        votePost: function(post_id, rating){
+            var deferred = $q.defer();
+            $http({
+                method: 'POST',
+                url: '/posts/'+ post_id + '/vote',
+                data: {vote: rating}
+            }).then(function successCallback(response){
+                deferred.resolve(response.data.vote);
             }, function errorCallback(response, status){
                 deferred.reject(response.data.error.message);
             });
