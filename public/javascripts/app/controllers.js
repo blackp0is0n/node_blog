@@ -105,8 +105,10 @@ app.controller('PostsController', function($scope,$log, $state, PostsService, $m
                 });
                 socket.on('comments_count', function(data) {
                     $scope.commentsCount = data;
+                    $scope.$apply(function(msg){
+                        console.log(msg);
+                    });
                 });
-
             }, function(error){
                 $scope.post = {};
             });
